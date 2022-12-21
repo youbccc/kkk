@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+  labels:
+    app: wd01
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wd01
+# Rolling Update
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: wd01
+    spec:
+# Antiaffinity
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #     - labelSelector:
+      #         matchExpressions:
+      #         - key: app
+      #           operator: In
+      #           values:
+      #           - information
+      #       topologyKey: "kubernetes.io/hostname"
+# Container
+      containers:
+      - name: wb
+        image: httpd:latest
+# Resource
+        resources:
+          requests:
+            cpu: 50m
+            memory: 50Mi
+# readinessProbe
+        readinessProbe:
+          exec:
+            command:
+            - ls
+            - /
+# livecnessProbe
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+# startupProbe
+#         startupProbe:
+#           httpGet:
+#             path: /
+#             port: 80
+#         ports:
+#         - containerPort: 8080
+
+
+
