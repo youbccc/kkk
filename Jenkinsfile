@@ -33,7 +33,7 @@ pipeline {
     stage('Tag Docker Image') {
       agent any
       steps {
-        sh 'docker image tag youbccc/kkk:latest youbcc/hello:$BUILD_NUMBER'
+        sh 'docker image tag youbccc/kkk:latest youbcc/kkk:$BUILD_NUMBER'
       }
     }
     stage('Publish Docker Image') {
@@ -50,7 +50,7 @@ pipeline {
         docker { image 'docker:dind' }
       }
       steps {
-        sh 'docker -H tcp://192.168.56.11:80 container run --detach --name webserver -p 80:8080 youbc/hello:$BUILD_NUMBER'
+        sh 'docker -H tcp://192.168.56.11:80 container run --detach --name webserver -p 80:8080 youbc/kkk:$BUILD_NUMBER'
       }
     }
   }
