@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db-sts
+spec:
+# Rolling Update
+  minReadySeconds: 20
+  selector:
+    matchLabels:
+      app: db-sts
+  serviceName: db-svc
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: db-sts
+    spec:
+      containers:
+      - name: db-c
+        image: mysql:latest
+        # readinessProbe
+        readinessProbe:
+          exec:
+            command:
+            - ls
+            - /
+        # livecnessProbe
+        livenessProbe:
+          exec:
+            command: ['mysqladmin', 'ping']
+        env:
+          - name: MYSQL_ALLOW_EMPTY_PASSWORD
+            value: "1"
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: db-mt
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: db-mt
+        persistentVolumeClaim:
+          claimName: db-pvc
