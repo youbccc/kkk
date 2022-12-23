@@ -34,7 +34,7 @@ spec:
 # Container
       containers:
       - name: wb
-        image: gcr.io/sjin1105/12project:latest
+        image: sjin1105/12project:latest
 # Resource
         resources:
           requests:
